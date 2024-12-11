@@ -1,14 +1,16 @@
 {
 "compilerOptions": {
   /* Language and Environment */
-  "target": "es2016",
-  "jsx": "react-jsx",  /* Ativa o suporte para JSX com React */
+  "target": "ESNext",
+  "jsx": "react",  /* Ativa o suporte para JSX com React */
 
   /* Modules */
-  "module": "commonjs",
+  "module": "ESNext",
   "esModuleInterop": true,
   "forceConsistentCasingInFileNames": true,
 
+  "moduleResolution": "Node",
+  
   /* Type Checking */
   "strict": true,
   "skipLibCheck": true
