@@ -8,6 +8,7 @@ const App: React.FC = () => {
         </div>
     );
 };
+console.log("O App está rodando");
 
 export default App;
 
