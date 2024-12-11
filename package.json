@@ -1,10 +1,11 @@
 {
   "name": "puc-projetosyslocacar",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "index.tsx",
+  "type":"module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "ts-node-dev --respawn src/index.ts",
+    "dev": "ts-node-dev --respawn src/index.tsx",
     "start": "ts-node src/app.tsx"
   },
   "keywords": [],
@@ -26,6 +27,7 @@
     "react-bootstrap": "^2.10.6",
     "react-dom": "^18.3.1",
     "react-router-dom": "^7.0.2",
+    "tsx": "^4.19.2",
     "uuid": "^11.0.3"
   },
   "devDependencies": {

@@ -1,5 +1,5 @@
 import api from "./api";
- 
+
 // Define o tipo Contrato para tipagem adequada
 export type Contrato = {
   id: number;
@@ -16,7 +16,7 @@ export type Contrato = {
     };
   }[];
 };
- 
+
 // Função para buscar contratos
 export const fetchContratos = async (): Promise<Contrato[]> => {
   try {
@@ -27,7 +27,7 @@ export const fetchContratos = async (): Promise<Contrato[]> => {
     throw error;
   }
 };
- 
+
 // Função para criar um novo contrato
 export const createContrato = async (contrato: Partial<Contrato>): Promise<Contrato> => {
   try {
@@ -38,7 +38,7 @@ const response = await api.post<Contrato>("/contratos", contrato);
     throw error;
   }
 };
- 
+
 // Função para atualizar um contrato existente
 export const updateContrato = async (id: number, contrato: Partial<Contrato>): Promise<Contrato> => {
   try {
@@ -49,7 +49,7 @@ export const updateContrato = async (id: number, contrato: Partial<Contrato>): P
     throw error;
   }
 };
- 
+
 // Função para excluir um contrato
 export const deleteContrato = async (id: number): Promise<void> => {
   try {

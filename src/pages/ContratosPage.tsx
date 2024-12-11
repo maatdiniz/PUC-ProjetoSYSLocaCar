@@ -12,7 +12,7 @@ const ContratosPage: React.FC = () => {
             try {
                 const data = await fetchContratos();
                 setContratos(data); // Agora o tipo é compatível
-              } catch (error) {
+            } catch (error) {
                 console.error("Erro ao carregar contratos:", error);
             }
         };
