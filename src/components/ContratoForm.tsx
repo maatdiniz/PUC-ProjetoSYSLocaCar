@@ -1,114 +1,137 @@
-import React, { useState, useEffect } from "react";
-import ReactDOM from "react-dom";
+import React, { useState, useEffect, ChangeEvent } from "react";
+import { Button, Form, Row, Col } from "react-bootstrap";
 import axios from "axios";
-import { ContratoLocacao, Veiculo } from "@prisma/client";
+import { Veiculo, ContratoLocacao } from "@prisma/client";
 
 interface ContratoFormProps {
-onSubmit: (contrato: Partial<ContratoLocacao>) => void;
+  onSubmit: (contrato: {
+    dataLocacao: string;
+    dataDevolucao: string;
+    valorCaucao: number;
+    valorTotal: number;
+    status: string;
+    veiculos: string[];
+  }) => void;
 }
 
 const ContratoForm: React.FC<ContratoFormProps> = ({ onSubmit }) => {
-    const [contrato, setContrato] = useState<Partial<ContratoLocacao>>({
-        dataLocacao: new Date(),
-        dataDevolucao: new Date(),
-        valorCaucao: 0,
-        valorTotal: 0,
-        status: "Aberto",
-    });
-const [veiculos, setVeiculos] = useState<Veiculo[]>([]);
+  const [contrato, setContrato] = useState({
+    dataLocacao: "",
+    dataDevolucao: "",
+    valorCaucao: 0,
+    valorTotal: 0,
+    status: "Aberto",
+    veiculos: [] as string[],
+  });
 
-// Fetch veículos do backend
-useEffect(() => {
-    axios.get("/api/veiculos").then((res) => setVeiculos(res.data));
-}, []);
+  const [veiculos, setVeiculos] = useState<Veiculo[]>([]);
 
-const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setContrato({ ...contrato, [e.target.name]: e.target.value });
-};
+  // Fetch veículos do backend
+  useEffect(() => {
+    const fetchVeiculos = async () => {
+      try {
+        const response = await axios.get<Veiculo[]>("/api/veiculos");
+        setVeiculos(response.data);
+      } catch (error) {
+        console.error("Erro ao buscar veículos:", error);
+      }
+    };
+    fetchVeiculos();
+  }, []);
 
-const handleSubmit = (e: React.FormEvent) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setContrato((prev) => ({
+      ...prev,
+      [name]: name === "valorCaucao" || name === "valorTotal" ? parseFloat(value) : value,
+    }));
+  };
+
+  const handleVeiculosChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    const selectedVeiculos = Array.from(e.target.selectedOptions, (option) => option.value);
+    setContrato((prev) => ({
+      ...prev,
+      veiculos: selectedVeiculos,
+    }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit(contrato);
-};
+  };
 
-return (
+  return (
     <Form onSubmit={handleSubmit}>
-    <Row>
+      <Row>
         <Col md={6}>
-        <Form.Group>
+          <Form.Group>
             <Form.Label>Data de Locação</Form.Label>
             <Form.Control
-                type="date"
-                name="dataLocacao"
-                value={contrato.dataLocacao?.toString()}
-                onChange={handleChange}
+              type="date"
+              name="dataLocacao"
+              value={contrato.dataLocacao}
+              onChange={handleChange}
             />
-        </Form.Group>
+          </Form.Group>
         </Col>
         <Col md={6}>
-        <Form.Group>
+          <Form.Group>
             <Form.Label>Data de Devolução</Form.Label>
             <Form.Control
-                type="date"
-                name="dataDevolucao"
-                value={contrato.dataDevolucao?.toString()}
-                onChange={handleChange}
+              type="date"
+              name="dataDevolucao"
+              value={contrato.dataDevolucao}
+              onChange={handleChange}
             />
-        </Form.Group>
+          </Form.Group>
         </Col>
-    </Row>
-    <Row>
+      </Row>
+      <Row>
         <Col md={6}>
-        <Form.Group>
+          <Form.Group>
             <Form.Label>Valor Caução</Form.Label>
             <Form.Control
-            type="number"
-            name="valorCaucao"
-            value={contrato.valorCaucao || ""}
-            onChange={handleChange}
+              type="number"
+              name="valorCaucao"
+              value={contrato.valorCaucao}
+              onChange={handleChange}
             />
-        </Form.Group>
+          </Form.Group>
         </Col>
         <Col md={6}>
-        <Form.Group>
+          <Form.Group>
             <Form.Label>Valor Total</Form.Label>
             <Form.Control
-                type="number"
-                name="valorTotal"
-                value={contrato.valorTotal || ""}
-                onChange={handleChange}
+              type="number"
+              name="valorTotal"
+              value={contrato.valorTotal}
+              onChange={handleChange}
             />
-        </Form.Group>
+          </Form.Group>
         </Col>
-    </Row>
-    <Form.Group>
-        <Form.Label>Veículos</Form.Label>
-        <Form.Control
-            as="select"
-            multiple
-            name="veiculos"
-            onChange={(e) =>
-            setContrato({
-                ...contrato,
-                veiculos: Array.from(
-                    e.target.selectedOptions,
-                    (option) => option.value
-                ),
-            })
-            }
-        >
-        {veiculos.map((veiculo) => (
-            <option key={veiculo.id} value={veiculo.id}>
-            {veiculo.placa} - {veiculo.status}
-            </option>
-        ))}
-        </Form.Control>
-    </Form.Group>
-    <Button variant="primary" type="submit" className="mt-3">
+      </Row>
+      <Form.Group>
+  <Form.Label>Veículos</Form.Label>
+  <select
+    multiple
+    name="veiculos"
+    value={contrato.veiculos}
+    onChange={handleVeiculosChange}
+    className="form-control" // Garantir o estilo
+  >
+    {veiculos.map((veiculo) => (
+      <option key={veiculo.id} value={veiculo.id}>
+        {veiculo.placa} - {veiculo.status}
+      </option>
+    ))}
+  </select>
+</Form.Group>
+
+      <Button variant="primary" type="submit" className="mt-3">
         Salvar Contrato
-    </Button>
+      </Button>
     </Form>
-    );
+  );
 };
 
 export default ContratoForm;

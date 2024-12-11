@@ -1,4 +1,5 @@
 import React from "react";
+import { Button, Table } from 'react-bootstrap';
 import ReactDOM from "react-dom";
 import { Veiculo } from "@prisma/client";
 
