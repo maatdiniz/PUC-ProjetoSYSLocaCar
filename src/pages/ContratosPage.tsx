@@ -3,14 +3,20 @@ import ReactDOM from "react-dom";
 import ContratosTable from "../components/ContratosTable";
 import { fetchContratos } from "../services/contratosService";
 
+
 const ContratosPage: React.FC = () => {
     const [contratos, setContratos] = useState([]);
 
     useEffect(() => {
         const loadContratos = async () => {
-            const data = await fetchContratos();
-            setContratos(data);
-            };
+            try {
+                const data = await fetchContratos(); // Certifique-se de que fetchContratos está tipado
+                setContratos(data); // Agora, data é do tipo Contrato[]
+            } catch (error) {
+                console.error("Erro ao carregar contratos:", error);
+            }
+        };
+    
         loadContratos();
     }, []);
 

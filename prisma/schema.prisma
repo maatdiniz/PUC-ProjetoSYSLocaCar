@@ -61,15 +61,13 @@ model Manutencao {
 }
 
 model ContratoLocacao {
-  id            Int          @id @default(autoincrement())
+  id            Int        @id @default(autoincrement())
   dataLocacao   DateTime
   dataDevolucao DateTime
   valorCaucao   Float
   valorTotal    Float
   status        String
-  veiculos      Veiculo[]
-  ocorrencias   Ocorrencia[]
-  pagamentos    Pagamento[]
+  veiculos      Veiculo[]  @relation("ContratoVeiculos")
 }
 
 model Ocorrencia {

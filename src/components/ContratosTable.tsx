@@ -1,33 +1,32 @@
 import React, { useEffect, useState } from "react";
-import { Button, Table } from 'react-bootstrap';
-import ReactDOM from "react-dom";
+import { Button, Table } from "react-bootstrap";
 import axios from "axios";
 
 // Definindo o tipo dos contratos
 type Contrato = {
-id: number;
-dataLocacao: string;
-dataDevolucao: string;
-valorCaucao: number;
-valorTotal: number;
-status: string;
-veiculos: {
+  id: number;
+  dataLocacao: string;
+  dataDevolucao: string;
+  valorCaucao: number;
+  valorTotal: number;
+  status: string;
+  veiculos: {
     id: number;
     placa: string;
     modelo: {
-    nome: string;
+      nome: string;
     };
-}[];
+  }[];
 };
 
 const ContratosTable: React.FC = () => {
-    const [contratos, setContratos] = useState<Contrato[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
+  const [contratos, setContratos] = useState<Contrato[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Função para buscar contratos do backend
 const fetchContratos = async () => {
     try {
-        const response = await axios.get("/api/contratos"); // Substitua pela URL correta
+        const response = await axios.get<Contrato[]>("/api/contratos"); // Tipagem explícita
         setContratos(response.data);
     } catch (error) {
         console.error("Erro ao buscar contratos:", error);
@@ -41,7 +40,7 @@ useEffect(() => {
 }, []);
 
 return (
-    <div>
+        <div>
         <h3>Contratos de Locação</h3>
         {isLoading ? (
             <p>Carregando...</p>
@@ -49,18 +48,18 @@ return (
             <Table striped bordered hover responsive>
             <thead>
                 <tr>
-                    <th>#</th>
-                    <th>Data Locação</th>
-                    <th>Data Devolução</th>
-                    <th>Valor Caução (R$)</th>
-                    <th>Valor Total (R$)</th>
-                    <th>Status</th>
-                    <th>Veículos</th>
-                    <th>Ações</th>
+                <th>#</th>
+                <th>Data Locação</th>
+                <th>Data Devolução</th>
+                <th>Valor Caução (R$)</th>
+                <th>Valor Total (R$)</th>
+                <th>Status</th>
+                <th>Veículos</th>
+                <th>Ações</th>
                 </tr>
-        </thead>
-        <tbody>
-            {contratos.map((contrato) => (
+            </thead>
+            <tbody>
+                {contratos.map((contrato) => (
                 <tr key={contrato.id}>
                     <td>{contrato.id}</td>
                     <td>{new Date(contrato.dataLocacao).toLocaleDateString()}</td>
@@ -71,11 +70,11 @@ return (
                     <td>
                     {contrato.veiculos.map((veiculo) => (
                         <div key={veiculo.id}>
-                            {veiculo.placa} - {veiculo.modelo.nome}
+                        {veiculo.placa} - {veiculo.modelo.nome}
                         </div>
                     ))}
-                </td>
-                <td>
+                    </td>
+                    <td>
                     <Button variant="warning" size="sm">
                         Editar
                     </Button>{" "}
@@ -84,14 +83,14 @@ return (
                     </Button>
                     </td>
                 </tr>
-            ))}
-        </tbody>
-        </Table>
-    ) : (
-        <p>Nenhum contrato encontrado.</p>
-    )}
-    </div>
-);
+                ))}
+            </tbody>
+            </Table>
+        ) : (
+            <p>Nenhum contrato encontrado.</p>
+        )}
+        </div>
+    );
 };
 
 export default ContratosTable;

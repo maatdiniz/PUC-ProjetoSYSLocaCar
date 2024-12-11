@@ -10,7 +10,7 @@ onSubmit: (contrato: Partial<ContratoLocacao>) => void;
 }
 
 type ExtendedContratoLocacao = Partial<ContratoLocacao> & {
-    veiculos?: string[];
+    veiculos: string[];
 };
 
 const ContratoForm: React.FC<ContratoFormProps> = ({ onSubmit }) => {
@@ -99,19 +99,19 @@ return (
         </Row>
         <Form.Group>
             <Form.Label>Veículos</Form.Label>
-            <Form.Control
-            as="select"
-            multiple
-            name="veiculos"
-            value={contrato.veiculos || []}
-            onChange={handleVeiculosChange}
-            >
-            {veiculos.map((veiculo) => (
-                <option key={veiculo.id} value={veiculo.id.toString()}>
-                {veiculo.placa} - {veiculo.status}
-                </option>
-            ))}
-            </Form.Control>
+            <select
+                multiple
+                name="veiculos"
+                value={contrato.veiculos || []}
+                onChange={handleVeiculosChange}
+                className="form-control"
+                >
+                {veiculos.map((veiculo) => (
+                    <option key={veiculo.id} value={veiculo.id}>
+                    {veiculo.placa} - {veiculo.status}
+                    </option>
+                ))}
+            </select>
         </Form.Group>
         <Button variant="primary" type="submit" className="mt-3">
             Salvar Contrato
